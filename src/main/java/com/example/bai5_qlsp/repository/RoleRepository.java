@@ -1,0 +1,12 @@
+package com.example.bai5_qlsp.repository;
+
+import com.example.bai5_qlsp.model.Role;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import java.util.Optional;
+
+@Repository
+public interface RoleRepository extends JpaRepository<Role, Integer> {
+    // Phương thức giúp tìm kiếm Role theo tên
+    Optional<Role> findByName(String name);
+}

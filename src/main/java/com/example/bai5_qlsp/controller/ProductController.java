@@ -7,7 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Controller
@@ -34,8 +39,33 @@ public class ProductController {
         return "product/add";
     }
 
+    // CẬP NHẬT: Thêm @RequestParam để nhận file ảnh
     @PostMapping("/save")
-    public String saveProduct(@ModelAttribute("product") Product product) {
+    public String saveProduct(@ModelAttribute("product") Product product,
+                              @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
+        
+        // Kiểm tra xem người dùng có chọn file ảnh không
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                // Lấy tên file gốc
+                String filename = imageFile.getOriginalFilename();
+                
+                // Định nghĩa đường dẫn lưu file vào thư mục static/images
+                Path path = Paths.get("src/main/resources/static/images/" + filename);
+                
+                // Tạo thư mục nếu chưa tồn tại
+                Files.createDirectories(path.getParent());
+                
+                // Ghi file vào ổ cứng
+                Files.write(path, imageFile.getBytes());
+                
+                // Lưu đường dẫn ảnh vào Database
+                product.setImage("/images/" + filename);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        
         productService.saveProduct(product);
         return "redirect:/products";
     }

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Truy Cập Bị Từ Chối</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background-color: #f8f9fa; }
+        .error-container { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: inline-block; }
+        h1 { color: #dc3545; font-size: 80px; margin: 0; }
+        h2 { color: #343a40; }
+        p { color: #6c757d; font-size: 18px; margin-bottom: 20px; }
+        a { text-decoration: none; padding: 10px 20px; background-color: #007bff; color: white; border-radius: 5px; font-weight: bold; }
+        a:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1>403</h1>
+        <h2>Không Có Quyền Truy Cập!</h2>
+        <p>Xin lỗi, bạn không có quyền thực hiện thao tác này. Chỉ có tài khoản <b>ADMIN</b> mới được phép.</p>
+        <a href="/products">Quay lại danh sách sản phẩm</a>
+    </div>
+</body>
+</html>
