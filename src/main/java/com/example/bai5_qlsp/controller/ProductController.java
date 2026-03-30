@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.data.domain.Page;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,9 +27,27 @@ public class ProductController {
     private CategoryService categoryService;
 
     @GetMapping
-    public String listProducts(Model model) {
-        List<Product> productList = productService.getAllProducts();
-        model.addAttribute("products", productList);
+    public String listProducts(
+            @RequestParam(value = "keyword", defaultValue = "") String keyword,
+            @RequestParam(value = "categoryId", required = false) Long categoryId,
+            @RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
+            @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir,
+            Model model) {
+        
+        int pageSize = 5; // Yêu cầu hiển thị 5 sản phẩm mỗi trang
+        Page<Product> page = productService.findPaginated(pageNo, pageSize, sortDir, keyword, categoryId);
+        
+        model.addAttribute("products", page.getContent());
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        
+        // Trả lại các tham số về view để giữ trạng thái cho form và thanh phân trang
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("categoryId", categoryId);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("categories", categoryService.getAllCategories());
+        
         return "product/list";
     }
 
